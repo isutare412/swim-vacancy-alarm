@@ -1,6 +1,6 @@
 package course
 
 type Config struct {
-	SwimCourseName         string
+	SwimCourseNames        []string
 	SeongnamSDCRegisterURL string
 }

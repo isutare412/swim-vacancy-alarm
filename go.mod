@@ -10,6 +10,7 @@ require (
 	github.com/knadh/koanf/v2 v2.1.1
 	github.com/lmittmann/tint v1.0.5
 	github.com/mattn/go-isatty v0.0.20
+	golang.org/x/sync v0.7.0
 )
 
 require (

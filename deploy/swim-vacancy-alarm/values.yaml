@@ -56,7 +56,9 @@ config:
   search:
     swim-course:
       every: 30s
-      course-name: "07시_연수"
+      course-names:
+        - "07시_연수"
+        - "09시_연수"
   register:
     seongnam-sdc-url: https://spo.isdc.co.kr/courseRegist.do
   telegram:

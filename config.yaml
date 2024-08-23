@@ -1,7 +1,7 @@
 search:
   swim-course:
     every: 30s
-    course-name: ""
+    course-names: []
 register:
   seongnam-sdc-url: https://spo.isdc.co.kr/courseRegist.do
 telegram:

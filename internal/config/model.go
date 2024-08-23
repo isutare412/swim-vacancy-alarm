@@ -16,8 +16,8 @@ type Config struct {
 
 type SearchConfig struct {
 	SwimCourse struct {
-		Every      time.Duration `koanf:"every"`
-		CourseName string        `koanf:"course-name"`
+		Every       time.Duration `koanf:"every"`
+		CourseNames []string      `koanf:"course-names"`
 	} `koanf:"swim-course"`
 }
 
@@ -38,7 +38,7 @@ func (c *Config) ToCronConfig() cron.Config {
 
 func (c *Config) ToCourseConfig() course.Config {
 	return course.Config{
-		SwimCourseName:         c.Search.SwimCourse.CourseName,
+		SwimCourseNames:        c.Search.SwimCourse.CourseNames,
 		SeongnamSDCRegisterURL: c.Register.SeongnameSDCURL,
 	}
 }
