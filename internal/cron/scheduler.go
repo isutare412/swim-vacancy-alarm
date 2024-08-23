@@ -36,6 +36,7 @@ func NewScheduler(cfg Config, courseService port.CourseService) (*Scheduler, err
 		gocron.DurationJob(cfg.ListCoursesInterval),
 		gocron.NewTask(scheduler.findSwimVacancies),
 		gocron.WithStartAt(gocron.WithStartImmediately()),
+		gocron.WithSingletonMode(gocron.LimitModeReschedule),
 	)
 
 	return scheduler, nil
