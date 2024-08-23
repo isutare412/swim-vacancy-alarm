@@ -11,8 +11,8 @@ import (
 	"github.com/isutare412/swim-vacancy-alarm/internal/config"
 	"github.com/isutare412/swim-vacancy-alarm/internal/core/service/course"
 	"github.com/isutare412/swim-vacancy-alarm/internal/cron"
-	"github.com/isutare412/swim-vacancy-alarm/internal/http"
 	_ "github.com/isutare412/swim-vacancy-alarm/internal/log"
+	"github.com/isutare412/swim-vacancy-alarm/internal/sportscenter"
 	"github.com/isutare412/swim-vacancy-alarm/internal/telegram"
 )
 
@@ -53,7 +53,7 @@ func main() {
 	slog.Debug("loaded config", "config", cfg)
 
 	telegramClient := telegram.NewClient(cfg.TelegramConfig())
-	seongnamSDCClient := http.SeongnamSDCClient{}
+	seongnamSDCClient := sportscenter.SeongnamSDCClient{}
 	courseService := course.NewService(cfg.ToCourseConfig(), &seongnamSDCClient, telegramClient)
 
 	cronScheduler, err := cron.NewScheduler(cfg.ToCronConfig(), courseService)
