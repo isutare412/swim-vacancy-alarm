@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/isutare412/swim-vacancy-alarm/internal/core/model"
 	"github.com/isutare412/swim-vacancy-alarm/internal/core/port"
@@ -16,6 +18,10 @@ type Service struct {
 
 	swimCourseName         string
 	seongnamSDCRegisterURL string
+
+	mu          sync.Mutex
+	fetchCount  int
+	lastLogTime time.Time
 }
 
 func NewService(
@@ -37,6 +43,7 @@ func (s *Service) FindSwimVacancies(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("fetching swim course data: %w", err)
 	}
+	s.tryLogCourseList(courseDataList)
 
 	var vacantCourses []*model.CourseData
 	for _, course := range courseDataList {
@@ -56,6 +63,20 @@ func (s *Service) FindSwimVacancies(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+func (s *Service) tryLogCourseList(courseList []*model.CourseData) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	s.fetchCount++
+
+	if !s.lastLogTime.IsZero() && time.Now().Sub(s.lastLogTime) < time.Hour {
+		return
+	}
+
+	slog.Info("fetched swim course data", "fetchCount", s.fetchCount, "courseCount", len(courseList))
+	s.lastLogTime = time.Now()
 }
 
 func buildVacancyAlarmMessage(courses []*model.CourseData, registerURL string) string {
