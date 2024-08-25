@@ -23,7 +23,7 @@ func (c *SeongnamSDCClient) FetchSwimCourseData(
 	target model.CourseTarget,
 	className string,
 ) ([]*model.CourseData, error) {
-	bodyValues := listCoursesFormBody(
+	bodyValues := buildListCoursesFormBody(
 		sportsCenterIDPangyo, categoryIDSwim, smallCategoryIDAll, courseTargetIDAdult, className)
 	req, err := http.NewRequestWithContext(
 		ctx, "POST", sdcSportsAPIListCourses, strings.NewReader(bodyValues.Encode()))
@@ -58,7 +58,7 @@ func (c *SeongnamSDCClient) FetchSwimCourseData(
 	return coursesData.toCourseDataList(), nil
 }
 
-func listCoursesFormBody(
+func buildListCoursesFormBody(
 	centerID sportsCenterID,
 	categoryID categoryID,
 	smallCategoryID smallCategoryID,
