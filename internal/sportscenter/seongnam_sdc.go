@@ -25,7 +25,8 @@ func (c *SeongnamSDCClient) FetchSwimCourseData(
 ) ([]*model.CourseData, error) {
 	bodyValues := listCoursesFormBody(
 		sportsCenterIDPangyo, categoryIDSwim, smallCategoryIDAll, courseTargetIDAdult, className)
-	req, err := http.NewRequestWithContext(ctx, "POST", sdcSportsAPIListCourses, strings.NewReader(bodyValues.Encode()))
+	req, err := http.NewRequestWithContext(
+		ctx, "POST", sdcSportsAPIListCourses, strings.NewReader(bodyValues.Encode()))
 	if err != nil {
 		return nil, fmt.Errorf("building http request: %w", err)
 	}
@@ -45,7 +46,8 @@ func (c *SeongnamSDCClient) FetchSwimCourseData(
 	}
 
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusBadRequest {
-		return nil, fmt.Errorf("unexpected response: %s", string(bodyBytes))
+		msg := simplifyResponseBody(string(bodyBytes))
+		return nil, fmt.Errorf("unexpected status code '%s': %s", resp.Status, msg)
 	}
 
 	var coursesData sdcListSportsCourseResponse
@@ -73,4 +75,12 @@ func listCoursesFormBody(
 	values.Add("page", "0")
 	values.Add("perPageNum", "100")
 	return values
+}
+
+func simplifyResponseBody(msg string) string {
+	switch {
+	case strings.Contains(msg, "서비스 일시 사용불가") && strings.Contains(msg, "계속될 경우, 관리자에게 문의 바랍니다."):
+		return "service temporarily unavailable, ask administrator if continues"
+	}
+	return msg
 }
