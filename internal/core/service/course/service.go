@@ -43,7 +43,7 @@ func NewService(
 func (s *Service) FindSwimVacancies(ctx context.Context) error {
 	coursesChan := make(chan []*model.CourseData, len(s.swimCourseNames))
 
-	eg, ctx := errgroup.WithContext(ctx)
+	eg, _ := errgroup.WithContext(ctx)
 	for _, name := range s.swimCourseNames {
 		eg.Go(func() error {
 			courses, err := s.seongnamSDCClient.FetchSwimCourseData(
